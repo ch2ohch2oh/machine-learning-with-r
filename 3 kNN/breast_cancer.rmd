@@ -1,0 +1,83 @@
+---
+title: "Diagnosing breast cancer with kNN"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Load data from csv file. The data file is downloaded from https://www.kaggle.com/uciml/breast-cancer-wisconsin-data/version/2#data.csv
+
+```{r}
+data <- read.csv('data.csv', stringsAsFactors = F)
+```
+
+View structure of data set
+```{r}
+str(data)
+```
+
+Drop id from the data
+```{r}
+data <- data[-1]
+```
+
+Let us see the distribution of diagnosis first
+```{r}
+table(data$diagnosis)
+```
+
+Convert diagnosis into factors
+```{r}
+data$diagnosis <- factor(data$diagnosis, levels = c('M', 'B'), labels = c('Malignant', 'Benign'))
+```
+
+Normalizing the numerical features
+```{r}
+normalize <- function(x) {
+  (x - min(x)) / (max(x) - min(x))
+}
+
+data.n <- as.data.frame(lapply(data[2:31], normalize))
+summary(data.n)
+```
+
+We have 569 observations in total. The first 469 observation serves as our training set while the rest 100 will be our
+test data.
+```{r}
+data.train <- data.n[1:469, ]
+data.test <- data.n[470:569, ]
+```
+
+Store the labels for the dataset.
+```{r}
+train.labels <- data[1:469, 1]
+test.labels <- data[470:569, 1]
+```
+
+Install and load the package for classification
+```{r}
+#install.packages('class')
+library(class)
+```
+
+Make prediction with kNN algorithm
+```{r}
+test.pred <- knn(train = data.train, test = data.test, cl = train.labels, k = 3)
+```
+
+Evaluate the performance of our model
+```{r}
+# install.packages('gmodels')
+library(gmodels)
+CrossTable(x = test.labels, y = test.pred)
+```
+
+In the cross table, there are four kinds of outcomes:
+
+* True positive
+* True negative
+* False positive (Bad)
+* False negative (Worse)
