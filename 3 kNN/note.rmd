@@ -1,0 +1,51 @@
+---
+title: "kNN"
+author: "Dazhi Wang"
+date: "October 29, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## kNN Algorithm
+
+Simple and effective but does not give much understanding of the data. 
+
+## Distance
+
+Euclidean distance.
+
+## What k to use?
+
+* Bias-variance trade-off
+
+## Normalization of features
+
+* min-max normalization
+$$ X \leftarrow \frac{x - min(x)}{max(x) - min(x)} $$
+
+* z-score normalization
+$$ x \leftarrow \frac{x - mean(x)}{std(x)} $$
+
+## Dummy coding of features
+
+An example of dummy coding:
+```
+male = 1 if x = male
+       0 otherwise
+```
+
+`n-1` dummy variables are needed for the encoding of `n` features. Example:
+```
+hot = 1 if x = hot
+      0 otherwise
+      medium = 1 if x = medium
+               0 otherwise
+```
+
+## Non-parametric learning
+
+No parameter is fitted from the data. In other words, we did not learn anything.
+
