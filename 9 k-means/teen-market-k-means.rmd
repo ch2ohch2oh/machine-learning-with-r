@@ -1,0 +1,114 @@
+---
+title: "Teen market segments via k-means"
+theme: paper
+output:
+  html_document:
+    theme: default
+---
+
+```{r}
+teens <- read.csv('snsdata.csv')
+```
+
+Let us first see the gender distribution of our dataset. 
+(NAs are excluded in the result)
+```{r}
+table(teens$gender)
+```
+
+The age distribution within the dataset.
+```{r}
+summary(teens$age)
+```
+
+The min age is 3 an the max age is 106 which means we need to clean up 
+the age. 
+```{r}
+teens$age <- ifelse(teens$age >= 13 & teens$age < 20, teens$age, NA)
+```
+
+Dummy coding of gender.
+```{r}
+teens$female <- ifelse(teens$gender == 'F' & !is.na(teens$gender), 1, 0)
+teens$no_gender <- ifelse(is.na(teens$gender), 1, 0)
+```
+
+Check the gender again.
+```{r}
+table(teens$gender)
+table(teens$female)
+table(teens$no_gender)
+```
+
+**Dealing with missing ages**
+
+The mean age is
+```{r}
+mean(teens$age, na.rm = T)
+```
+
+Age by graduation year is
+```{r}
+aggregate(data = teens, age ~ gradyear, mean, na.rm = T)
+```
+
+Thus the age differs by one year per change in graduation year. 
+```{r}
+ave_age <- ave(teens$age, teens$gradyear, FUN = function(x) mean(x, na.rm = T))
+teens$age <- ifelse(is.na(teens$age), ave_age, teens$age)
+summary(teens$age)
+```
+
+**Training the model**
+```{r}
+features <- teens[5:40]
+# z-score normalization
+features.z <- as.data.frame(lapply(features, scale))
+```
+
+Let us first try to divide the data into 5 clusters.
+```{r}
+teen_clusters <- kmeans(features.z, 5)
+```
+
+The sizes of the clusters are 
+```{r}
+teen_clusters$size
+```
+
+The centers of the clusters are 
+```{r}
+teen_clusters$centers[, 1:8]
+```
+
+Set the cluster as an extra column of the dataset.
+```{r}
+teens$cluster <- teen_clusters$cluster
+```
+
+Let us try to visualize the clusters.
+```{r}
+plot(c(0, 10), c(0, 10), type = 'n', 
+     xlab = 'one feature', ylab = 'another feature')
+points(x = jitter(subset(teens, cluster == 1)$rock, 1), 
+     y = jitter(subset(teens, cluster == 1)$mall, 1),
+     pch = 1, col = rgb(red = 1, green = 0, blue = 0, alpha = 0.5))
+points(x = jitter(subset(teens, cluster == 2)$rock, 1), 
+     y = jitter(subset(teens, cluster == 2)$mall, 1),
+     pch = 1, col = rgb(red = 0, green = 1, blue = 0, alpha = 0.5))
+points(x = jitter(subset(teens, cluster == 3)$rock, 1), 
+     y = jitter(subset(teens, cluster == 3)$mall, 1),
+     pch = 1, col = rgb(red = 0, green = 0, blue = 1, alpha = 0.5))
+```
+
+The results are not pretty because two many features were used for 
+the clustering while the result is only plotted in 2 dimension.
+
+Now let us take a look at the scatterplot matrices. It is obvious from the
+plots that most data points are concentrated near the origin/axis and this 
+makes it harder to draw the boundaries between different clusters. As a 
+consequence, it is questionable whether the data points form clusters or not.
+
+```{r}
+pairs(features.z[1:5])
+```

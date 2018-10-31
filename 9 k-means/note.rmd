@@ -1,0 +1,47 @@
+---
+title: "Chapter 9 -  Finding groups of data - clustering with k-means"
+output: html_notebook
+theme: paper
+---
+
+Clustering is one of unsupervised learning task. Somtimes it is refered to as unsupervised classification.
+
+Clustering algorithms use a process very similar to what one will did when visually inspecting the scatterplot.
+
+k-means: assign n examples into predetermined k clusters. For different initial assignment of clusters, the final result
+ might not be the same. If the final results differ drastically for slightly different initial assignment, that might 
+indicate the data does not have well defined clusters.
+
+Two ways of choose the initial cluster centers:
+
+1. Choose the intial k cluster centers randomly.
+
+2. Randomly assign each point to a cluster and go directly to the update phase.
+
+Voronoi diagram: indicates the areas that are closer to one cluster center than any other. 
+
+Update phase of k-means algo: shift the center of cluster to the centroid ("center of mass"")
+
+A video explaining how k-means works: https://www.youtube.com/watch?v=_aWzGGNrcic
+
+To summarize how k-means works:
+
+1. Choose the positions of the centroids
+
+2. Update the assignment of the data points
+
+3. Compute the new positions of the centroids
+
+4. If it is possible to update the assignment of data points, goto 2. 
+Otherwise, stop.
+
+**Choosing the number of clusters requires delicate balance.**
+
+How many clusters to choose for n data points? If you do not have any better choice, 
+the rule of thumb is to use sqrt(n/2).
+
+**Elbow method** tries to assess the homogeneity/heterogeneity within the cluster as 
+k changes. By plotting the within-group homogeneity vs k graph, an optimal size of 
+k could be find.
+
+
