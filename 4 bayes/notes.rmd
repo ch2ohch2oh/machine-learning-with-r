@@ -1,0 +1,42 @@
+---
+title: "4 Bayes"
+output:
+  html_document:
+    df_print: paged
+---
+
+**Bayeisan methods** were developed by Thomas Bayes in the 18th century.
+
+While many algorithms ignore featrures that ahve weak effects, Bayesian 
+methods utilize ll available evidence to subtly change the predictions.
+
+Terms:
+
+* Events
+* Trials
+* Mutual exclusive
+* Joint probability
+* Independent events
+* Conditional probability
+* Prior probability
+
+**Bayes theorem**
+$$ P(\text{spam} | \text{Viagra}) = 
+\frac{P(\text{Viagra} | \text{spam}) P(\text{spam})}{P(\text{Viagra})}$$
+
+It can be also rewritten as 
+```
+posterior probabilty = likelihood * prior probability / marginal likelihood
+```
+**Naive Bayes algorithm**
+One underlying assumption of naive Bayes is class conditional independence. 
+Simply put
+$$ P(A|BC) = \frac{P(ABC)}{P(BC)} = \frac{P(BC|A)P(A)}{P(BC)}
+ = \frac{P(B|A)P(A) + P(C|A)P(A)}{P(B)P(C)} $$
+
+$$ P(C_L|F_1, \dots, F_n) = \frac1{Z} p(C_L) \prod_{i=1}^n p(F_i|C_L) $$
+
+**Laplace estimator**
+It is a trick.
+
+Now I know the rough idea of Bayes algorithm :-)
